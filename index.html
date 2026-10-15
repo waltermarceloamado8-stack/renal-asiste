@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RENAL ASISTE</title>
+<style>
+:root{--celeste:#dff5ff;--celeste2:#b9e9fb;--azul:#126b91;--rojo:#e53935;--texto:#17323d;--blanco:#fff}
+*{box-sizing:border-box} body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(180deg,var(--celeste),#fff);color:var(--texto)}
+header{background:var(--blanco);padding:22px 16px;text-align:center;border-bottom:3px solid var(--celeste2)}
+.logo{width:92px;height:92px;margin:auto}.logo svg{width:100%;height:100%}
+h1{margin:8px 0 3px;color:var(--azul);font-size:30px}.sub{margin:0;color:#4c6872}
+main{max-width:900px;margin:auto;padding:18px 14px}
+.search{width:100%;padding:14px 16px;border:2px solid var(--celeste2);border-radius:14px;font-size:16px;background:white}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+button{border:0;border-radius:20px;padding:9px 13px;background:#fff;color:var(--azul);box-shadow:0 1px 5px #0001;cursor:pointer}
+button.active{background:var(--azul);color:white}
+.card{background:white;border-radius:15px;margin:10px 0;box-shadow:0 2px 10px #00000012;overflow:hidden}
+.q{width:100%;text-align:left;font-weight:bold;font-size:16px;border-radius:0;padding:16px;color:var(--texto)}
+.a{display:none;padding:0 16px 17px;line-height:1.55}.card.open .a{display:block}
+.warn{background:#fff1f1;border-left:5px solid var(--rojo);padding:12px;border-radius:8px;margin-top:10px}
+footer{text-align:center;padding:25px 14px;color:#607780;font-size:13px}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">
+<svg viewBox="0 0 100 100" aria-label="Riñón rojo sonriente">
+<path d="M61 13c-18-4-36 7-41 25-6 22 7 48 27 49 17 1 20-15 17-27-3-12 3-18 11-24 9-7 5-20-14-23z" fill="#e53935"/>
+<circle cx="45" cy="45" r="4" fill="#17323d"/><circle cx="65" cy="45" r="4" fill="#17323d"/>
+<path d="M45 57c6 7 13 7 19 0" fill="none" stroke="#17323d" stroke-width="3" stroke-linecap="round"/>
+</svg>
+</div>
+<h1>RENAL ASISTE</h1>
+<p class="sub">Información clara para pacientes y familias en hemodiálisis</p>
+</header>
+<main>
+<input id="search" class="search" placeholder="🔎 ¿Qué querés saber?" oninput="render()">
+<div id="chips" class="chips"></div>
+<div id="list"></div>
+<div class="warn"><b>Importante:</b> RENAL ASISTE brinda información educativa y no reemplaza las indicaciones del equipo de salud. Ante una situación urgente, buscá atención médica.</div>
+</main>
+<footer>Material educativo — seguí siempre las indicaciones de tu equipo de salud.</footer>
+<script>
+const data=[
+["Hemodiálisis","¿Qué es la hemodiálisis?","Es un tratamiento que ayuda a eliminar de la sangre sustancias de desecho y exceso de líquido cuando los riñones no pueden hacerlo adecuadamente."],
+["Hemodiálisis","¿Por qué es importante cumplir la sesión completa?","La duración de cada sesión está indicada de manera individual. Completar el tiempo prescripto permite realizar el tratamiento previsto y controlar mejor el exceso de líquido y sustancias acumuladas."],
+["Hemodiálisis","¿Qué pasa si falto a una sesión?","No faltes ni suspendas sesiones por tu cuenta. Comunicate con tu centro para recibir indicaciones, especialmente si aumentaste de peso, tenés falta de aire o hinchazón."],
+["Peso y líquidos","¿Qué es el peso seco?","Es un peso de referencia establecido por el equipo de salud en el que se intenta que no haya exceso significativo de líquido, sin provocar síntomas por retirar demasiado."],
+["Peso y líquidos","¿Qué significa aumentar mucho de peso entre sesiones?","Con frecuencia refleja acumulación de líquido. Un aumento importante puede favorecer hinchazón, presión arterial elevada y dificultad respiratoria."],
+["Peso y líquidos","¿Por qué debo controlar cuánto tomo?","En hemodiálisis, el exceso de líquidos puede acumularse entre sesiones. La cantidad permitida depende de tu situación clínica y de la indicación de tu equipo."],
+["Alimentación","¿Por qué debo cuidar la sal?","La sal favorece la sed y la retención de líquidos. Reducirla puede ayudarte a controlar la sed, el aumento de peso entre sesiones y la presión arterial."],
+["Alimentación","¿Puedo comer alimentos con potasio?","La cantidad adecuada depende de tus análisis y del plan indicado. No elimines ni aumentes alimentos ricos en potasio sin consultar al equipo o nutricionista."],
+["Alimentación","¿Por qué se controla el fósforo?","Cuando los riñones no funcionan bien, el fósforo puede acumularse. El control incluye alimentación, medicación cuando corresponde y seguimiento de laboratorio."],
+["Medicamentos","¿Qué son los quelantes de fósforo?","Son medicamentos que se toman habitualmente junto con las comidas para disminuir la absorción intestinal del fósforo. Deben usarse exactamente como fueron indicados."],
+["Acceso vascular","¿Cómo cuido mi fístula?","Mantené la zona limpia, observá cambios y evitá golpes o compresión. No permitas que se tome la presión ni se extraiga sangre del brazo de la fístula salvo indicación específica del equipo."],
+["Acceso vascular","¿Qué señales pueden indicar un problema en la fístula?","Dolor intenso, enrojecimiento, calor, secreción, hinchazón, sangrado persistente o pérdida del frémito habitual requieren valoración del equipo."],
+["Catéter","¿Cómo cuido un catéter de hemodiálisis?","Mantené el apósito y la zona según el protocolo indicado. No manipules las conexiones por tu cuenta y consultá si aparece fiebre, secreción, dolor, enrojecimiento o sangrado."],
+["Catéter","¿Qué hago si el catéter sangra?","Si hay sangrado importante o que no se detiene con las medidas indicadas por el equipo, buscá atención urgente. No retires ni manipules el catéter."],
+["Anemia","¿Por qué puedo necesitar eritropoyetina?","La enfermedad renal puede disminuir la producción de eritropoyetina y favorecer anemia. El tratamiento se ajusta según hemoglobina, hierro y otros controles."],
+["Síntomas","¿Es normal sentirse cansado después de dializarme?","Puede ocurrir cansancio después de una sesión, pero si es intenso, nuevo o acompañado de mareos, dolor de pecho, falta de aire o desmayo, debe ser evaluado."],
+["Síntomas","¿Qué hago si tengo calambres durante la diálisis?","Avisá inmediatamente al personal. Los calambres pueden relacionarse con cambios de volumen, presión u otros factores y requieren valoración."],
+["Síntomas","¿Qué hago si me baja la presión durante la diálisis?","Avisá al personal de inmediato. No intentes resolverlo solo: el equipo evaluará presión, síntomas y tratamiento."],
+["Urgencias","¿Cuándo debo buscar atención urgente?","Ante falta de aire intensa, dolor de pecho, desmayo, confusión importante, sangrado que no se controla, fiebre con deterioro marcado u otros síntomas graves, buscá atención urgente."],
+["Vida diaria","¿Puedo viajar si estoy en hemodiálisis?","En muchos casos es posible, pero requiere planificación previa, coordinación de sesiones y documentación médica. Consultá con anticipación a tu centro."],
+["Vida diaria","¿Puedo trabajar o estudiar?","Muchas personas pueden hacerlo, dependiendo de su estado clínico y horario de tratamiento. Conversá con tu equipo para adaptar la rutina de manera segura."],
+["Familia","¿Cómo puede ayudar mi familia?","Puede acompañarte con la organización de sesiones, medicación, alimentación y controles, respetando tu autonomía y las indicaciones del equipo."],
+["Controles","¿Por qué me hacen análisis periódicos?","Permiten controlar anemia, electrolitos, nutrición, metabolismo mineral y otros aspectos del tratamiento para ajustar las indicaciones cuando sea necesario."],
+["Hemodiálisis","¿Qué pasa si acorto una sesión?","Reducir el tiempo sin indicación puede disminuir la cantidad de tratamiento recibido. Si necesitás retirarte antes, avisá al equipo para evaluar la situación."],
+["Peso y líquidos","¿Por qué puedo tener hinchazón en las piernas?","Puede relacionarse con acumulación de líquido, entre otras causas. Si la hinchazón aumenta, es nueva o se acompaña de falta de aire, informalo al equipo."],
+["Alimentación","¿Qué puedo tomar entre sesiones?","La cantidad depende de tu producción de orina, peso, presión, edema y otras condiciones. Seguí el volumen indicado por tu equipo."],
+["Medicamentos","¿Debo tomar mis medicamentos antes de la diálisis?","No todos se manejan igual. Algunos pueden requerir horarios específicos alrededor de la sesión. No suspendas ni cambies dosis sin indicación profesional."],
+["Catéter","¿Puedo mojar el catéter?","Seguí el protocolo de tu centro. En general, el apósito y las conexiones deben protegerse y mantenerse según las indicaciones del equipo."],
+["Educación","¿RENAL ASISTE reemplaza a mi médico o enfermero?","No. Es una herramienta educativa. Las decisiones sobre medicación, peso seco, dieta, líquidos y tratamiento deben ser tomadas por el equipo que conoce tu historia clínica."]
+];
+let category="Todos";
+const cats=["Todos",...new Set(data.map(x=>x[0]))];
+function renderChips(){chips.innerHTML=cats.map(c=>`<button class="${c===category?'active':''}" onclick="category='${c.replace(/'/g,"\\'")}';render()">${c}</button>`).join("")}
+function render(){
+renderChips();
+const term=search.value.toLowerCase();
+const rows=data.filter(x=>(category==="Todos"||x[0]===category)&&(!term||x[1].toLowerCase().includes(term)||x[2].toLowerCase().includes(term)));
+list.innerHTML=rows.length?rows.map(x=>`<div class="card"><button class="q" onclick="this.parentElement.classList.toggle('open')">${x[1]} ▾</button><div class="a">${x[2]}</div></div>`).join(""):"<p>No encontré una respuesta con esos términos. Probá con otra pregunta o consultá al equipo de salud.</p>";
+}
+render();
+</script>
+</body>
+</html>
